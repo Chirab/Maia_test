@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     MDBListGroup,
     MDBListGroupItem,
@@ -22,13 +22,18 @@ const AddButton = () => {
 
     const toggle = () => { setModal(!modal) }
 
+    function refreshPage() {
+        window.location.reload(false);
+    }
+
     async function sendNewProduct(e) {
         e.preventDefault();
         const newData = { newProduct : newProduct};
         try {
             axios.post("http://localhost:4000/product/addNewProduct", newData)
                 .then(res => {
-                    console.log(res)
+                    if (res.status === 200)
+                        refreshPage();
                 })
                 .catch(err => console.log(err));
         }
@@ -63,14 +68,30 @@ const AddButton = () => {
 }
 
 export default function () {
+    const [listProduct, setList] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://localhost:4000/product/getAllProduct")
+            .then(res => {
+                setList(res.data);
+                console.log(res.data);
+            })
+            .catch(err =>  console.log(err))
+    }, []);
+
+
     return (
         <div>
             <MDBContainer className="list">
                 <MDBListGroup style={{ width: "30rem" }}>
                     <p style={{fontWeight : "bold", fontSize : "3em"}}>Liste des produits</p>
                     <br/>
-                    <MDBListGroupItem className="d-flex justify-content-between align-items-center">Morbi leo risus<MDBBadge color="primary" pill>1</MDBBadge>
-                    </MDBListGroupItem>
+                    {listProduct && listProduct.map(item => {
+                            return (
+                                <MDBListGroupItem className="d-flex justify-content-between align-items-center">{item.product} :   {item.EAN}<MDBBadge color="primary" pill>{item.quantity}</MDBBadge>
+                                </MDBListGroupItem>
+                            )
+                        })}
                 </MDBListGroup>
             </MDBContainer>
             <br/>

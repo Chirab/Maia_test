@@ -9,6 +9,11 @@ let ProductSchema = new mongoose.Schema({
       type : Number,
       required: true,
       default: ''
+    },
+    quantity : {
+        type : Number,
+        required: true,
+        default: ''
     }
 });
 const Product = mongoose.model('Product', ProductSchema);

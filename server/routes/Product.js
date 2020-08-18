@@ -19,7 +19,7 @@ router.post('/addNewProduct', async (req, res) => {
 
 router.get('/getAllProduct', async (req, res) => {
     const getNewProduct = Container.get(productClass);
-    getNewProduct.getProduct()
+    await getNewProduct.getProduct()
         .then(result => {
             res.status(200).send(result);
         })
