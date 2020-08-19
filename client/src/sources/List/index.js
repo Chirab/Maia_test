@@ -4,81 +4,39 @@ import {
     MDBListGroupItem,
     MDBContainer,
     MDBBadge,
-    MDBBtn,
-    MDBIcon,
-    MDBModal,
-    MDBModalBody,
-    MDBModalHeader,
-    MDBModalFooter,
-    MDBInput
+    MDBInput,
 } from "mdbreact";
 import "./index.css";
 import axios from "axios";
+import AddButton from "../component/AddButton";
 
-const AddButton = () => {
-
-    const [modal, setModal] = useState(false);
-    const [newProduct, setNewProduct] = useState("");
-
-    const toggle = () => { setModal(!modal) }
-
-    function refreshPage() {
-        window.location.reload(false);
-    }
-
-    async function sendNewProduct(e) {
-        e.preventDefault();
-        const newData = { newProduct : newProduct};
-        try {
-            axios.post("http://localhost:4000/product/addNewProduct", newData)
-                .then(res => {
-                    if (res.status === 200)
-                        refreshPage();
-                })
-                .catch(err => console.log(err));
-        }
-        catch  {
-            console.log("error")
-        }
-    }
-
-    return (
-        <div>
-            <MDBBtn color="primary" onClick={toggle}>
-                <MDBIcon icon="plus" className="mr-1" />
-            </MDBBtn>
-            <form onSubmit={sendNewProduct}>
-                <MDBModal isOpen={modal} toggle={toggle}>
-                <MDBModalHeader toggle={toggle}>Ajouter un produit</MDBModalHeader>
-                <MDBModalBody>
-                    <MDBInput
-                        label="Produit"
-                        value={newProduct}
-                        onChange={e => setNewProduct(e.target.value)}
-                    />
-                </MDBModalBody>
-                <MDBModalFooter>
-                    <MDBBtn color="secondary" onClick={toggle}>Close</MDBBtn>
-                    <MDBBtn color="primary" type="submit">Envoyer</MDBBtn>
-                </MDBModalFooter>
-                </MDBModal>
-            </form>
-        </div>
-    )
-}
 
 export default function () {
     const [listProduct, setList] = useState([]);
+    const [search, setSearch] = useState(null);
 
-    useEffect(() => {
+    useEffect( () => {
         axios.get("http://localhost:4000/product/getAllProduct")
             .then(res => {
                 setList(res.data);
-                console.log(res.data);
+                console.log(res.data)
             })
             .catch(err =>  console.log(err))
     }, []);
 
+    const items = listProduct.filter((data) => {
+        if (search === null)
+            return data;
+        else if (data.product.toLowerCase().includes(search.toLowerCase()) || (data.EAN + '').includes(search))
+            return data;
+    }).map(data => {
+        return (
+            <MDBListGroupItem className="d-flex justify-content-between align-items-center">
+                {data.product} :   {data.EAN}
+                <MDBBadge color="primary" pill>{data.quantity}</MDBBadge>
+            </MDBListGroupItem>
+        )
+    })
 
     return (
         <div>
@@ -86,12 +44,12 @@ export default function () {
                 <MDBListGroup style={{ width: "30rem" }}>
                     <p style={{fontWeight : "bold", fontSize : "3em"}}>Liste des produits</p>
                     <br/>
-                    {listProduct && listProduct.map(item => {
-                            return (
-                                <MDBListGroupItem className="d-flex justify-content-between align-items-center">{item.product} :   {item.EAN}<MDBBadge color="primary" pill>{item.quantity}</MDBBadge>
-                                </MDBListGroupItem>
-                            )
-                        })}
+                    <MDBInput
+                        label="Recherche"
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                    <br/>
+                    {items}
                 </MDBListGroup>
             </MDBContainer>
             <br/>

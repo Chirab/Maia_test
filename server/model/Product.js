@@ -6,7 +6,7 @@ let ProductSchema = new mongoose.Schema({
         default: ''
     },
     EAN : {
-      type : Number,
+      type : String,
       required: true,
       default: ''
     },
