@@ -1,0 +1,25 @@
+version: "3"
+services:
+  frontend:
+    container_name: react
+    depends_on:
+      - backend
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - './client:/usr/src/'
+      - '/usr/src/node_modules'
+    stdin_open: true
+  backend:
+    container_name: nodeserver
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - './server:/usr/src/'
+      - './server/package.json:/usr/src/package.json'

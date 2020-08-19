@@ -3,6 +3,7 @@ const router = express.Router();
 const cors = require('cors');
 var Container = require('typedi').Container;
 const productClass = require('../services/productClass');
+
 router.use(cors());
 
 router.post('/addNewProduct', async (req, res) => {

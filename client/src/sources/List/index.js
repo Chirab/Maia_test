@@ -42,7 +42,7 @@ export default function () {
         <div>
             <MDBContainer className="list">
                 <MDBListGroup style={{ width: "30rem" }}>
-                    <p style={{fontWeight : "bold", fontSize : "3em"}}>Liste des produits</p>
+                    <p style={{fontWeight : "bold", fontSize : "3em"}}>List des produits</p>
                     <br/>
                     <MDBInput
                         label="Recherche"

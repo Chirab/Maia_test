@@ -49,7 +49,6 @@ module.exports = class Products {
                                 length: 13,
                                 startsWithLowerCase: true
                             });
-                            console.log(eanNumber);
                             const Data = new Product({product: newProduct, EAN: eanNumber, quantity: quantityProduct})
                             Data.save()
                                 .then(result => {
@@ -62,8 +61,8 @@ module.exports = class Products {
                     })
                     .catch(err => reject(err));
             }
-            catch {
-                reject()
+            catch(e) {
+                reject(e)
             }
         })
     }
@@ -77,11 +76,11 @@ module.exports = class Products {
                        resolve(result);
                     })
                     .catch(err => {
-                        reject();
+                        reject(err);
                     })
             }
-            catch  {
-                reject();
+            catch(e)  {
+                reject(e);
             }
         })
     }

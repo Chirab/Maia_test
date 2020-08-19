@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 var cors = require('cors');
 var mongoose = require('mongoose');
@@ -7,6 +6,7 @@ var port = process.env.PORT || 4000;
 var bodyParser = require('body-parser');
 const { mongoDB } = require('./util/config');
 const productRouter = require('./routes/Product');
+
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json())
@@ -20,6 +20,7 @@ connection.once('open', () => {
 );
 
 app.use('/product', productRouter);
+
 app.listen(port, () => {
     console.log('server launched');
 });
